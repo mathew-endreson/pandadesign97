@@ -24,7 +24,7 @@ function Divider({ top }) {
     )
 }
 
-function ContactSection() {
+function ContactSection({ offsetY = 0 }) {
     const [form, setForm] = useState({ name: '', email: '', message: '' })
     const [status, setStatus] = useState('idle')
 
@@ -54,7 +54,14 @@ function ContactSection() {
     }
 
     return (
-        <>
+        // Shifted down by `offsetY` so it clears the shop grid above it — that
+        // grid's height varies with column count (2 cols on phone vs 4 on
+        // desktop) and active filter, which the fixed-pixel canvas this whole
+        // page is built on can't account for on its own. `translateY` on this
+        // wrapper moves every absolutely-positioned child below at once,
+        // since it becomes their containing block without touching each
+        // hardcoded `top-[...]` value individually.
+        <div style={{ transform: `translateY(${offsetY}px)` }}>
             <div id="contact" className="absolute left-0 top-[5880px]" aria-hidden="true" />
 
             <Reveal as="p" className="absolute left-[calc(50%-67px)] top-[5972px] h-[52px] w-[352px] font-display text-[43px] font-extrabold uppercase leading-normal text-black" style={{ fontVariationSettings: '"opsz" 14, "wdth" 100' }}>
@@ -134,7 +141,7 @@ function ContactSection() {
                     </p>
                 </Reveal>
             </form>
-        </>
+        </div>
     )
 }
 

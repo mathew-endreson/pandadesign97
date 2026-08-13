@@ -7,11 +7,11 @@ import iconArrowUp from '../assets/landing/icon-arrow-up.svg'
 
 const fv = { fontVariationSettings: '"opsz" 14, "wdth" 100' }
 
-function Footer() {
+function Footer({ offsetY = 0 }) {
     const { scrollTo } = useSmoothScroll()
 
     return (
-        <div className="absolute left-0 top-[6882px] h-[724px] w-[1440px]">
+        <div className="absolute left-0 h-[724px] w-[1440px]" style={{ top: 6882 + offsetY }}>
             <div className="absolute inset-0 bg-[#1c1c1c]" />
 
             <Reveal as="div" amount={0.4} className="absolute left-[24px] top-[160px] flex w-[464px] flex-wrap content-start items-start gap-[4px_24px] whitespace-nowrap pr-[48px] font-display text-[20px] leading-[1.2]">

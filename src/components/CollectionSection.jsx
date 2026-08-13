@@ -1,17 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import Reveal from './Reveal'
 import { useHitSlop } from '../context/ScaleContext'
 import ProductCard from './ProductCard'
-import productEightBallCarpet from '../assets/landing/product-8ball-carpet.png'
-import productAestheticPosters from '../assets/landing/product-aesthetic-posters.png'
-import productIpodMirror from '../assets/landing/product-ipod-mirror.png'
-import productCigaretteLamp from '../assets/landing/product-cigarette-lamp.png'
-import productPaintMirror from '../assets/landing/product-paint-mirror.png'
-import productAestheticPosters2 from '../assets/landing/product-aesthetic-posters-2.png'
-import productSkateboards from '../assets/landing/product-skateboards.png'
-import productOnePieceMirror from '../assets/landing/product-one-piece-mirror.png'
-import productBasketballNet from '../assets/landing/product-basketball-net.png'
-import productCornerMirror from '../assets/landing/product-corner-mirror.png'
+import { db } from '../lib/firebase'
 
 const filters = [
     { label: 'all', width: 70 },
@@ -22,32 +14,42 @@ const filters = [
     { label: 'lamps', width: 120 },
 ]
 
-const products = [
-    { image: productEightBallCarpet, name: '8 ball carpet', price: '2000 DA', amount: 2000, category: 'decor' },
-    { image: productAestheticPosters, name: 'aesthetic posters', price: '1500 DA', amount: 1500, category: 'posters' },
-    { image: productIpodMirror, name: 'ipod mirror', price: '3800 DA', amount: 3800, category: 'mirrors' },
-    { image: productCigaretteLamp, name: 'cigarette lamp', price: '4000 DA', amount: 4000, category: 'lamps' },
-    { image: productPaintMirror, name: 'paint mirror', price: '3000 DA', amount: 3000, category: 'mirrors' },
-    { image: productAestheticPosters2, name: 'aesthetic posters', price: '1500 DA', amount: 1500, category: 'posters' },
-    { image: productSkateboards, name: 'skateboards', price: '4500 DA', amount: 4500, category: 'decor' },
-    { image: productCigaretteLamp, name: 'cigarette lamp', price: '2500 DA', amount: 2500, category: 'lamps' },
-    { image: productOnePieceMirror, name: 'one piece mirror', price: '3000 DA', amount: 3000, category: 'mirrors' },
-    { image: productBasketballNet, name: 'basketball net', price: '2500 DA', amount: 2500, category: 'decor' },
-    { image: productCornerMirror, name: 'corner mirror', price: '3500 DA', amount: 3500, category: 'mirrors' },
-    { image: productEightBallCarpet, name: '8 ball carpet', price: '2000 DA', amount: 2000, category: 'decor' },
-    { image: productPaintMirror, name: 'paint mirror', price: '3000 DA', amount: 3000, category: 'mirrors' },
-    { image: productAestheticPosters2, name: 'aesthetic posters', price: '1500 DA', amount: 1500, category: 'posters' },
-    { image: productSkateboards, name: 'skateboards', price: '4500 DA', amount: 4500, category: 'decor' },
-    { image: productCigaretteLamp, name: 'cigarette lamp', price: '2500 DA', amount: 2500, category: 'lamps' },
-].map((product, i) => ({ ...product, id: i }))
+// Vertical space the fixed-pixel canvas originally budgets for this grid
+// before the Contact section's anchor (top-[5880px] - top-[3591px]). The
+// grid's real height varies with column count (2 on phone, 4 on desktop) and
+// the active filter, so anything taller than this needs everything below it
+// pushed down by the difference — see the ResizeObserver effect below.
+const GRID_HEIGHT_BUDGET = 5880 - 3591
 
-function CollectionSection() {
+function CollectionSection({ onGridHeightChange }) {
     const [activeFilter, setActiveFilter] = useState('all')
+    const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(true)
     const pillHitSlop = useHitSlop(15)
+    const gridWrapRef = useRef(null)
+
+    useEffect(() => {
+        const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setProducts(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
+            setLoading(false)
+        })
+        return unsubscribe
+    }, [])
 
     const filteredProducts = useMemo(() => {
         return products.filter((product) => activeFilter === 'all' || product.category === activeFilter)
-    }, [activeFilter])
+    }, [products, activeFilter])
+
+    useEffect(() => {
+        const el = gridWrapRef.current
+        if (!el || !onGridHeightChange) return undefined
+        const observer = new ResizeObserver(() => {
+            onGridHeightChange(Math.max(0, el.offsetHeight - GRID_HEIGHT_BUDGET))
+        })
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [onGridHeightChange])
 
     return (
         <>
@@ -94,13 +96,17 @@ function CollectionSection() {
                 })}
             </div>
 
-            <div className="absolute left-[38px] top-[3591px] w-[1364px]">
-                {filteredProducts.length === 0 ? (
+            <div ref={gridWrapRef} className="absolute left-[38px] top-[3591px] w-[1364px]">
+                {loading ? (
                     <p className="py-16 text-center font-heading text-[20px] capitalize text-ink/50">
-                        no products match this filter.
+                        loading products…
+                    </p>
+                ) : filteredProducts.length === 0 ? (
+                    <p className="py-16 text-center font-heading text-[20px] capitalize text-ink/50">
+                        {products.length === 0 ? 'no products yet.' : 'no products match this filter.'}
                     </p>
                 ) : (
-                    <div className="grid grid-cols-4 gap-x-[16px] gap-y-[35px]">
+                    <div className="grid grid-cols-2 gap-x-[16px] gap-y-[35px] md:grid-cols-4">
                         {filteredProducts.map((product, i) => (
                             <ProductCard key={product.id} index={i} {...product} />
                         ))}

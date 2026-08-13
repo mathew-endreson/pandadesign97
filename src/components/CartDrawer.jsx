@@ -52,9 +52,14 @@ function CartDrawer({ isOpen, onClose }) {
                                         />
                                         <div className="flex flex-1 flex-col gap-2">
                                             <div className="flex items-start justify-between gap-2">
-                                                <p className="font-heading text-[16px] font-semibold capitalize leading-tight text-ink">
-                                                    {item.name}
-                                                </p>
+                                                <div>
+                                                    <p className="font-heading text-[16px] font-semibold capitalize leading-tight text-ink">
+                                                        {item.name}
+                                                    </p>
+                                                    {item.size && (
+                                                        <p className="font-body text-[12px] text-ink/40">{item.size}</p>
+                                                    )}
+                                                </div>
                                                 <button
                                                     type="button"
                                                     aria-label={`Remove ${item.name}`}

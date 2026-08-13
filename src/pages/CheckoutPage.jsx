@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { useCart } from '../context/CartContext'
 import noestDeskData from '../data/noestDesks'
+import { db } from '../lib/firebase'
 import pandaLogo from '../assets/landing/panda-logo.svg'
 
 const SHIPPING_METHODS = [
@@ -27,9 +29,11 @@ function Field({ label, error, children }) {
 function CheckoutPage() {
     const { items, subtotal, clearCart } = useCart()
     const [shippingMethod, setShippingMethod] = useState('home')
-    const [form, setForm] = useState({ name: '', phone: '', wilaya: '', commune: '', address: '' })
+    const [form, setForm] = useState({ name: '', phone: '', wilaya: '', commune: '' })
     const [errors, setErrors] = useState({})
     const [order, setOrder] = useState(null)
+    const [submitting, setSubmitting] = useState(false)
+    const [submitError, setSubmitError] = useState('')
 
     const shippingCost = SHIPPING_METHODS.find((m) => m.id === shippingMethod)?.price ?? 0
     const total = subtotal + shippingCost
@@ -53,20 +57,38 @@ function CheckoutPage() {
         if (form.phone.replace(/\D/g, '').length < 9) next.phone = 'Enter a valid phone number.'
         if (!form.wilaya) next.wilaya = 'Select your wilaya.'
         if (!form.commune.trim()) next.commune = 'Select your commune.'
-        if (shippingMethod === 'home' && !form.address.trim()) next.address = 'Enter your delivery address.'
         setErrors(next)
         return Object.keys(next).length === 0
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         if (!validate()) return
-        setOrder({
-            number: Math.floor(100000 + Math.random() * 900000),
-            name: form.name.trim(),
-            total,
-        })
-        clearCart()
+
+        const orderNumber = Math.floor(100000 + Math.random() * 900000)
+        setSubmitError('')
+        setSubmitting(true)
+        try {
+            await addDoc(collection(db, 'orders'), {
+                orderNumber,
+                name: form.name.trim(),
+                phone: form.phone.trim(),
+                wilaya: form.wilaya,
+                commune: form.commune,
+                shippingMethod,
+                items: items.map(({ name, size, amount, qty }) => ({ name, size: size ?? null, amount, qty })),
+                subtotal,
+                shippingCost,
+                total,
+                createdAt: serverTimestamp(),
+            })
+            setOrder({ number: orderNumber, name: form.name.trim(), total })
+            clearCart()
+        } catch {
+            setSubmitError('Something went wrong placing your order. Please try again.')
+        } finally {
+            setSubmitting(false)
+        }
     }
 
     if (order) {
@@ -89,7 +111,7 @@ function CheckoutPage() {
                     We&apos;ll call you shortly to confirm delivery details.
                 </p>
                 <p className="mt-3 font-body text-[13px] text-ink/40">
-                    This is a demo checkout — no payment was processed and no order was placed.
+                    Cash on delivery — no online payment was processed.
                 </p>
                 <Link
                     to="/"
@@ -185,16 +207,6 @@ function CheckoutPage() {
                                 </select>
                             </Field>
                         </div>
-                        {shippingMethod === 'home' && (
-                            <Field label="address" error={errors.address}>
-                                <input
-                                    className={inputClass}
-                                    value={form.address}
-                                    onChange={handleChange('address')}
-                                    placeholder="Street, building, floor…"
-                                />
-                            </Field>
-                        )}
                     </section>
 
                     <section className="flex flex-col gap-4">
@@ -232,14 +244,6 @@ function CheckoutPage() {
                             })}
                         </div>
                     </section>
-
-                    <section className="flex flex-col gap-4">
-                        <h2 className="font-heading text-[18px] font-semibold capitalize text-ink">payment method</h2>
-                        <div className="flex items-center gap-3 rounded-[6px] border-2 border-black px-4 py-3">
-                            <input type="radio" name="payment" checked readOnly className="size-[18px] accent-black" />
-                            <span className="font-heading text-[15px] font-medium capitalize text-ink">cash on delivery</span>
-                        </div>
-                    </section>
                 </form>
 
                 <aside className="flex flex-col gap-5 rounded-[8px] border border-black/10 bg-white p-5 shadow-[0_2px_16px_rgba(0,0,0,0.06)] lg:sticky lg:top-24 lg:order-2">
@@ -254,7 +258,10 @@ function CheckoutPage() {
                                         {item.qty}
                                     </span>
                                 </div>
-                                <p className="flex-1 font-heading text-[14px] font-medium capitalize leading-tight text-ink">{item.name}</p>
+                                <div className="flex-1">
+                                    <p className="font-heading text-[14px] font-medium capitalize leading-tight text-ink">{item.name}</p>
+                                    {item.size && <p className="font-body text-[12px] text-ink/40">{item.size}</p>}
+                                </div>
                                 <p className="whitespace-nowrap font-heading text-[14px] font-semibold text-ink">
                                     {(item.amount * item.qty).toLocaleString()} DA
                                 </p>
@@ -278,14 +285,17 @@ function CheckoutPage() {
                         <span>{total.toLocaleString()} DA</span>
                     </div>
 
+                    {submitError && <p className="font-body text-[13px] text-brand-red">{submitError}</p>}
+
                     <motion.button
                         type="button"
                         onClick={handleSubmit}
+                        disabled={submitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.97 }}
-                        className="w-full rounded-[4px] bg-brand-red py-3.5 font-heading text-[17px] font-semibold capitalize text-white transition-colors hover:bg-black"
+                        className="w-full rounded-[4px] bg-brand-red py-3.5 font-heading text-[17px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
                     >
-                        confirm order
+                        {submitting ? 'placing order…' : 'confirm order'}
                     </motion.button>
                 </aside>
             </div>

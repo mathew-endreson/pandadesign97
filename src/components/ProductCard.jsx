@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useCart } from '../context/CartContext'
 import { useHitSlop } from '../context/ScaleContext'
 
-function ProductCard({ image, name, price, amount, category, index = 0 }) {
+function ProductCard({ image, name, price, amount, category, size, index = 0 }) {
     const shouldReduceMotion = useReducedMotion()
     const { addItem } = useCart()
     const [justAdded, setJustAdded] = useState(false)
@@ -18,20 +18,20 @@ function ProductCard({ image, name, price, amount, category, index = 0 }) {
 
     const handleAddToCart = () => {
         const id = `${name}-${amount}`.toLowerCase().replace(/\s+/g, '-')
-        addItem({ id, name, price, amount, image, category })
+        addItem({ id, name, price, amount, image, category, size })
         setJustAdded(true)
     }
 
     return (
         <motion.div
-            className="group flex w-[329px] flex-col items-start gap-[17px]"
+            className="group flex w-full flex-col items-start gap-[17px] md:w-[329px]"
             initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: columnDelay, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -6 }}
         >
-            <div className="h-[350px] w-full overflow-hidden rounded-[5px]">
+            <div className="aspect-[329/350] w-full overflow-hidden rounded-[5px] md:aspect-auto md:h-[350px]">
                 <img
                     src={image}
                     alt={name}
@@ -40,15 +40,20 @@ function ProductCard({ image, name, price, amount, category, index = 0 }) {
             </div>
             <div className="flex w-full flex-col items-start gap-[38px] capitalize">
                 <div className="flex w-full items-center gap-[17px]">
-                    <p className="h-[32px] w-[205px] font-heading text-[26px] font-semibold leading-normal text-[#1c1c1c]">
-                        {name}
-                    </p>
+                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+                        <p className="font-heading text-[26px] font-semibold leading-normal text-[#1c1c1c]">
+                            {name}
+                        </p>
+                        {size && (
+                            <p className="font-body text-[13px] font-normal leading-none text-[#1c1c1c]/50">{size}</p>
+                        )}
+                    </div>
                     <div className="flex h-[32px] w-[107px] flex-col justify-center font-heading text-[22px] font-medium leading-none text-[#d21720]">
                         <p className="leading-normal">{price}</p>
                     </div>
                 </div>
                 <div className="flex w-full flex-col items-start gap-[14px]">
-                    <div className="flex h-[39px] w-[317px] flex-col justify-center font-body text-[16px] font-light leading-none text-[#1c1c1c]" style={{ fontVariationSettings: '"wdth" 100' }}>
+                    <div className="flex h-[39px] w-full flex-col justify-center font-body text-[16px] font-light leading-none text-[#1c1c1c]" style={{ fontVariationSettings: '"wdth" 100' }}>
                         <p className="leading-normal">Timeless d&eacute;cor, carefully curated to help you create ...</p>
                     </div>
                     <motion.button
