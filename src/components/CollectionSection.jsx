@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import Reveal from './Reveal'
 import { useHitSlop } from '../context/ScaleContext'
 import ProductCard from './ProductCard'
@@ -29,12 +29,22 @@ function CollectionSection({ onGridHeightChange }) {
     const gridWrapRef = useRef(null)
 
     useEffect(() => {
+        // A one-time fetch rather than a live onSnapshot listener — the shop
+        // doesn't need to reflect admin edits mid-visit, and a static fetch
+        // means each visitor costs one batch of reads instead of holding a
+        // persistent connection open for their whole session, which matters
+        // once concurrent traffic gets large. Admin's own product list still
+        // uses onSnapshot, where live sync across staff sessions is worth it.
+        let cancelled = false
         const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        getDocs(q).then((snapshot) => {
+            if (cancelled) return
             setProducts(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
             setLoading(false)
         })
-        return unsubscribe
+        return () => {
+            cancelled = true
+        }
     }, [])
 
     const filteredProducts = useMemo(() => {
