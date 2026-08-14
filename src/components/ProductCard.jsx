@@ -3,7 +3,9 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useCart } from '../context/CartContext'
 import { useHitSlop } from '../context/ScaleContext'
 
-function ProductCard({ image, name, price, amount, category, size, index = 0 }) {
+const FALLBACK_DESCRIPTION = 'Timeless décor, carefully curated to help you create ...'
+
+function ProductCard({ image, name, price, amount, category, size, description, index = 0 }) {
     const shouldReduceMotion = useReducedMotion()
     const { addItem } = useCart()
     const [justAdded, setJustAdded] = useState(false)
@@ -21,6 +23,8 @@ function ProductCard({ image, name, price, amount, category, size, index = 0 }) 
         addItem({ id, name, price, amount, image, category, size })
         setJustAdded(true)
     }
+
+    const shownDescription = description?.trim() || FALLBACK_DESCRIPTION
 
     return (
         <motion.div
@@ -53,8 +57,8 @@ function ProductCard({ image, name, price, amount, category, size, index = 0 }) 
                     </div>
                 </div>
                 <div className="flex w-full flex-col items-start gap-[14px]">
-                    <div className="flex h-[39px] w-full flex-col justify-center font-body text-[16px] font-light leading-none text-[#1c1c1c]" style={{ fontVariationSettings: '"wdth" 100' }}>
-                        <p className="leading-normal">Timeless d&eacute;cor, carefully curated to help you create ...</p>
+                    <div className="flex min-h-[39px] w-full flex-col justify-center font-body text-[16px] font-light leading-snug text-[#1c1c1c]" style={{ fontVariationSettings: '"wdth" 100' }}>
+                        <p className="line-clamp-2">{shownDescription}</p>
                     </div>
                     <motion.button
                         type="button"
