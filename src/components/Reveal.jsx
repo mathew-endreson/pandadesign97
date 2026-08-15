@@ -34,6 +34,7 @@ function Reveal({
     float = false,
     floatDistance = 10,
     floatDuration = 4,
+    wobble = 0,
     ...props
 }) {
     const shouldReduceMotion = useReducedMotion()
@@ -68,6 +69,7 @@ function Reveal({
             .start({ opacity: 1, ...settled, transition: { duration, delay, ease: EASE } })
             .then(() => controls.start({
                 y: [0, -floatDistance, 0],
+                ...(wobble ? { rotate: [-wobble, wobble, -wobble] } : {}),
                 transition: { duration: floatDuration, ease: 'easeInOut', repeat: Infinity },
             }))
     }

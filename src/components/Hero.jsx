@@ -70,6 +70,7 @@ function PlusBadge({ left, top, size, fontSize, glyphLeft, glyphTop, glyphW, gly
 function Hero() {
     const { scrollTo } = useSmoothScroll()
     const ctaHitSlop = useHitSlop(14)
+    const shouldReduceMotion = useReducedMotion()
     const maskStyle = (position) => ({
         maskImage: `url(${collageMask})`,
         WebkitMaskImage: `url(${collageMask})`,
@@ -187,7 +188,13 @@ function Hero() {
                 floatDuration={4}
                 className="absolute left-[1241px] top-[1062px] h-[292px] w-[285px] overflow-hidden pointer-events-none"
             >
-                <img alt="" src={accentRecord} className="absolute left-0 top-[-18.29%] h-[136.59%] w-full max-w-none" />
+                <motion.img
+                    alt=""
+                    src={accentRecord}
+                    className="absolute left-0 top-[-18.29%] h-[136.59%] w-full max-w-none"
+                    animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+                    transition={shouldReduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: 'linear' }}
+                />
             </Reveal>
             <Reveal
                 as="div"
@@ -198,6 +205,7 @@ function Hero() {
                 float
                 floatDistance={8}
                 floatDuration={4.5}
+                wobble={4}
                 className="absolute left-[468px] top-[1241px] h-[177px] w-[231px]"
             >
                 <img alt="" src={accentClock} className="absolute inset-0 size-full max-w-none object-cover" />
@@ -220,10 +228,10 @@ function Hero() {
                 word from our store
             </Reveal>
 
-            <Reveal as="div" y={0} x={-24} amount={0.4} float floatDistance={10} floatDuration={5} className="absolute left-[-109px] top-[1324px] h-[377px] w-[252px] overflow-hidden pointer-events-none">
+            <Reveal as="div" y={0} x={-24} amount={0.4} float floatDistance={10} floatDuration={5} wobble={3} className="absolute left-[-109px] top-[1324px] h-[377px] w-[252px] overflow-hidden pointer-events-none">
                 <img alt="" src={decorRecord} className="absolute left-[-29.28%] top-[-2.28%] h-[104.32%] w-[158.56%] max-w-none" />
             </Reveal>
-            <Reveal as="div" y={0} scale={0.8} delay={0.15} amount={0.4} float floatDistance={6} floatDuration={4.2} className="absolute left-[75px] top-[1582px] h-[116px] w-[118px] overflow-hidden pointer-events-none">
+            <Reveal as="div" y={0} scale={0.8} delay={0.15} amount={0.4} float floatDistance={6} floatDuration={4.2} wobble={5} className="absolute left-[75px] top-[1582px] h-[116px] w-[118px] overflow-hidden pointer-events-none">
                 <img alt="" src={decorHeadphones} className="absolute left-[-11.9%] top-[-13.11%] h-[123.39%] w-[121.52%] max-w-none" />
             </Reveal>
         </>
