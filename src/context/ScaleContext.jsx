@@ -1,13 +1,17 @@
 import { createContext, useContext } from 'react'
 
-const ScaleContext = createContext(1)
+const ScaleContext = createContext({ scale: 1, isMobile: false })
 
-export function ScaleProvider({ scale, children }) {
-    return <ScaleContext.Provider value={scale}>{children}</ScaleContext.Provider>
+export function ScaleProvider({ scale, isMobile = false, children }) {
+    return <ScaleContext.Provider value={{ scale, isMobile }}>{children}</ScaleContext.Provider>
 }
 
 export function useScale() {
-    return useContext(ScaleContext)
+    return useContext(ScaleContext).scale
+}
+
+export function useIsMobile() {
+    return useContext(ScaleContext).isMobile
 }
 
 // The canvas this renders inside is shrunk with `transform: scale()`, which
@@ -18,4 +22,17 @@ export function useScale() {
 export function useHitSlop(px) {
     const scale = useScale()
     return px / scale
+}
+
+// Same inverse-scale trick, generalized to any CSS length (font-size, a fixed
+// box height, etc.) — not just padding. Text/controls inside the canvas
+// inherit the exact same shrink factor as the decorative imagery around
+// them, which is fine for a hero headline but makes dense text (product
+// names, prices, descriptions) shrink down to genuinely unreadable sizes on
+// small phones. Pass the size you actually want rendered, in real screen
+// px, and only apply it where `isMobile` — desktop keeps its original
+// Figma-derived scaled sizing untouched.
+export function useResponsiveSize(mobilePx) {
+    const { scale, isMobile } = useContext(ScaleContext)
+    return isMobile ? mobilePx / scale : undefined
 }

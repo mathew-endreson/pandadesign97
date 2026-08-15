@@ -50,7 +50,7 @@ function LandingPage() {
                 className="absolute left-0 w-[1440px] bg-white"
                 style={{ top: navRealHeight, height: canvasHeight, transform: `scale(${scale})`, transformOrigin: 'top left' }}
             >
-                <ScaleProvider scale={scale}>
+                <ScaleProvider scale={scale} isMobile={isMobileNav}>
                     <MarqueeBanner />
                     <Hero />
                     <VisionSection />
