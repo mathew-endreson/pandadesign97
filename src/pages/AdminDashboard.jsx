@@ -31,65 +31,96 @@ function TabButton({ active, onClick, children }) {
 const thClass = 'px-4 py-3 font-heading text-[12px] font-semibold uppercase tracking-wide text-ink/50'
 const tdClass = 'px-4 py-3 align-top font-body text-[13px] text-ink/70'
 
-function OrdersTab({ orders, loading }) {
+function OrdersTab({ orders, loading, error }) {
+    const [deletingId, setDeletingId] = useState(null)
+    const [deleteError, setDeleteError] = useState('')
+
+    const handleDelete = async (order) => {
+        if (!window.confirm(`Delete order #${order.orderNumber ?? order.id.slice(0, 6)}? This can't be undone.`)) return
+        setDeleteError('')
+        setDeletingId(order.id)
+        try {
+            await deleteDoc(doc(db, 'orders', order.id))
+        } catch {
+            setDeleteError('Could not delete the order. Try again.')
+        } finally {
+            setDeletingId(null)
+        }
+    }
+
+    if (error) return <p className="font-body text-[15px] text-brand-red">{error}</p>
     if (loading) return <p className="font-body text-[15px] text-ink/50">Loading orders…</p>
     if (orders.length === 0) return <p className="font-body text-[15px] text-ink/50">No orders yet.</p>
 
     return (
-        <div className="overflow-x-auto rounded-[8px] border border-black/10">
-            <table className="w-full min-w-[880px] border-collapse text-left">
-                <thead>
-                    <tr className="border-b border-black/10 bg-black/[0.02]">
-                        <th className={thClass}>Order</th>
-                        <th className={thClass}>Date</th>
-                        <th className={thClass}>Customer</th>
-                        <th className={thClass}>Delivery</th>
-                        <th className={thClass}>Items</th>
-                        <th className={`${thClass} text-right`}>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {orders.map((order) => (
-                        <tr key={order.id} className="border-b border-black/10 last:border-b-0">
-                            <td className={`${tdClass} font-heading text-[14px] font-semibold text-ink`}>
-                                #{order.orderNumber ?? order.id.slice(0, 6)}
-                            </td>
-                            <td className={tdClass}>
-                                {order.createdAt?.toDate ? order.createdAt.toDate().toLocaleString() : 'just now'}
-                            </td>
-                            <td className={tdClass}>
-                                <p className="font-semibold text-ink">{order.name}</p>
-                                <p>{order.phone}</p>
-                            </td>
-                            <td className={tdClass}>
-                                <p>{order.commune}, {order.wilaya}</p>
-                                {order.address && <p>{order.address}</p>}
-                                <p className="capitalize text-ink/50">
-                                    {order.shippingMethod === 'home' ? 'Home delivery' : 'Stop desk pickup'}
-                                </p>
-                            </td>
-                            <td className={tdClass}>
-                                {order.items?.map((item, i) => (
-                                    <p key={i} className="capitalize">
-                                        {item.name}
-                                        {item.size ? ` (${item.size})` : ''} × {item.qty}
-                                    </p>
-                                ))}
-                            </td>
-                            <td className={`${tdClass} text-right font-heading text-[14px] font-semibold text-ink`}>
-                                {order.total?.toLocaleString()} DA
-                            </td>
+        <div className="flex flex-col gap-3">
+            {deleteError && <p className="font-body text-[13px] text-brand-red">{deleteError}</p>}
+            <div className="overflow-x-auto rounded-[8px] border border-black/10">
+                <table className="w-full min-w-[960px] border-collapse text-left">
+                    <thead>
+                        <tr className="border-b border-black/10 bg-black/[0.02]">
+                            <th className={thClass}>Order</th>
+                            <th className={thClass}>Date</th>
+                            <th className={thClass}>Customer</th>
+                            <th className={thClass}>Delivery</th>
+                            <th className={thClass}>Items</th>
+                            <th className={`${thClass} text-right`}>Total</th>
+                            <th className={thClass} aria-hidden="true"></th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {orders.map((order) => (
+                            <tr key={order.id} className="border-b border-black/10 last:border-b-0">
+                                <td className={`${tdClass} font-heading text-[14px] font-semibold text-ink`}>
+                                    #{order.orderNumber ?? order.id.slice(0, 6)}
+                                </td>
+                                <td className={tdClass}>
+                                    {order.createdAt?.toDate ? order.createdAt.toDate().toLocaleString() : 'just now'}
+                                </td>
+                                <td className={tdClass}>
+                                    <p className="font-semibold text-ink">{order.name}</p>
+                                    <p>{order.phone}</p>
+                                </td>
+                                <td className={tdClass}>
+                                    <p>{order.commune}, {order.wilaya}</p>
+                                    {order.address && <p>{order.address}</p>}
+                                    <p className="capitalize text-ink/50">
+                                        {order.shippingMethod === 'home' ? 'Home delivery' : 'Stop desk pickup'}
+                                    </p>
+                                </td>
+                                <td className={tdClass}>
+                                    {order.items?.map((item, i) => (
+                                        <p key={i} className="capitalize">
+                                            {item.name}
+                                            {item.size ? ` (${item.size})` : ''} × {item.qty}
+                                        </p>
+                                    ))}
+                                </td>
+                                <td className={`${tdClass} text-right font-heading text-[14px] font-semibold text-ink`}>
+                                    {order.total?.toLocaleString()} DA
+                                </td>
+                                <td className={`${tdClass} text-right`}>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDelete(order)}
+                                        disabled={deletingId === order.id}
+                                        className="rounded-full border border-brand-red/30 px-3 py-1 font-heading text-[12px] font-medium capitalize text-brand-red transition-colors hover:border-brand-red disabled:opacity-50"
+                                    >
+                                        {deletingId === order.id ? '…' : 'delete'}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }
 
 const emptyForm = { name: '', size: '', amount: '', category: CATEGORIES[0], imageUrl: '', description: '' }
 
-function ProductsTab({ products, loading }) {
+function ProductsTab({ products, loading, loadError }) {
     const [form, setForm] = useState(emptyForm)
     const [editingId, setEditingId] = useState(null)
     const [submitting, setSubmitting] = useState(false)
@@ -259,7 +290,9 @@ function ProductsTab({ products, loading }) {
                 </button>
             )}
 
-            {loading ? (
+            {loadError ? (
+                <p className="font-body text-[15px] text-brand-red">{loadError}</p>
+            ) : loading ? (
                 <p className="font-body text-[15px] text-ink/50">Loading products…</p>
             ) : (
                 <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
@@ -295,29 +328,53 @@ function ProductsTab({ products, loading }) {
 }
 
 function AdminDashboard() {
-    const { logout } = useAuth()
+    const { logout, user } = useAuth()
     const navigate = useNavigate()
     const [tab, setTab] = useState('orders')
     const [orders, setOrders] = useState([])
     const [ordersLoading, setOrdersLoading] = useState(true)
+    const [ordersError, setOrdersError] = useState('')
     const [products, setProducts] = useState([])
     const [productsLoading, setProductsLoading] = useState(true)
+    const [productsError, setProductsError] = useState('')
 
     useEffect(() => {
         const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'))
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setOrders(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
-            setOrdersLoading(false)
-        })
+        const unsubscribe = onSnapshot(
+            q,
+            (snapshot) => {
+                setOrders(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
+                setOrdersLoading(false)
+            },
+            (error) => {
+                setOrdersError(
+                    error.code === 'permission-denied'
+                        ? `Your account (UID: ${user?.uid}) can't read orders — it isn't in the Firestore rules admin allowlist.`
+                        : `Couldn't load orders: ${error.message}`
+                )
+                setOrdersLoading(false)
+            }
+        )
         return unsubscribe
     }, [])
 
     useEffect(() => {
         const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setProducts(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
-            setProductsLoading(false)
-        })
+        const unsubscribe = onSnapshot(
+            q,
+            (snapshot) => {
+                setProducts(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
+                setProductsLoading(false)
+            },
+            (error) => {
+                setProductsError(
+                    error.code === 'permission-denied'
+                        ? `Your account (UID: ${user?.uid}) can't read products — it isn't in the Firestore rules admin allowlist.`
+                        : `Couldn't load products: ${error.message}`
+                )
+                setProductsLoading(false)
+            }
+        )
         return unsubscribe
     }, [])
 
@@ -353,9 +410,9 @@ function AdminDashboard() {
                 </div>
 
                 {tab === 'orders' ? (
-                    <OrdersTab orders={orders} loading={ordersLoading} />
+                    <OrdersTab orders={orders} loading={ordersLoading} error={ordersError} />
                 ) : (
-                    <ProductsTab products={products} loading={productsLoading} />
+                    <ProductsTab products={products} loading={productsLoading} loadError={productsError} />
                 )}
             </div>
         </div>
