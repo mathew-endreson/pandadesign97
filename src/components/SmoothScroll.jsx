@@ -10,10 +10,15 @@ export function SmoothScrollProvider({ children }) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         if (prefersReducedMotion) return undefined
 
+        // smoothWheel: false — wheel/trackpad scrolling now passes straight
+        // through natively (instant, no easing lag), matching a plain
+        // unmodified scroll feel. Lenis stays mounted purely so `scrollTo()`
+        // (nav-link clicks, "back to top", etc.) still animates smoothly —
+        // that's independent of smoothWheel and unaffected by this change.
         const lenis = new Lenis({
             duration: 1.1,
             easing: (t) => 1 - Math.pow(1 - t, 3),
-            smoothWheel: true,
+            smoothWheel: false,
         })
         lenisRef.current = lenis
 
