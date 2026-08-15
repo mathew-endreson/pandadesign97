@@ -30,8 +30,15 @@ function Footer({ offsetY = 0 }) {
                 <button type="button" onClick={() => scrollTo('#contact', { offset: -40 })} className="shrink-0 font-medium tracking-[-0.4px] text-[#adb3ab] transition-colors hover:text-white" style={fv}>Contacts</button>
             </Reveal>
 
-            <Reveal fadeOnly as="p" amount={0.4} className="absolute inset-[13.81%_29.17%_82.6%_57.71%] whitespace-nowrap font-display text-[22px] font-normal tracking-[-0.44px] leading-[1.2] text-[#eceeec]" style={fv}>
-                +213-000-000-000
+            <Reveal
+                fadeOnly
+                as="a"
+                href="tel:+213792559277"
+                amount={0.4}
+                className="absolute inset-[13.81%_29.17%_82.6%_57.71%] whitespace-nowrap font-display text-[22px] font-normal tracking-[-0.44px] leading-[1.2] text-[#eceeec] transition-colors hover:text-white/70"
+                style={fv}
+            >
+                +213-792-559-277
             </Reveal>
             <Reveal fadeOnly as="p" amount={0.4} className="absolute inset-[13.26%_42.5%_82.04%_56.94%] whitespace-nowrap font-display text-[28px] font-extralight leading-[1.2] text-[#3c403c]" style={fv}>(</Reveal>
             <Reveal fadeOnly as="p" amount={0.4} className="absolute inset-[13.26%_28.19%_82.04%_71.32%] whitespace-nowrap font-display text-[28px] font-extralight leading-[1.2] text-[#3c403c]" style={fv}>)</Reveal>
@@ -48,7 +55,33 @@ function Footer({ offsetY = 0 }) {
 
             <Reveal fadeOnly as="div" delay={0.15} amount={0.4} className="absolute bottom-[69.06%] left-[calc(87.5%-6.5px)] top-[24.86%] flex -translate-x-1/2 flex-col items-start gap-[8px] whitespace-nowrap">
                 <p className="shrink-0 font-display text-[12px] font-medium leading-[1.3] text-[#3c403c]" style={fv}>Email</p>
-                <p className="shrink-0 font-display text-[14px] font-normal leading-[1.4] text-[#adb3ab]" style={fv}>hello@logoipsum.com</p>
+                <a href="mailto:cttpub@gmail.com" className="shrink-0 font-display text-[14px] font-normal leading-[1.4] text-[#adb3ab] transition-colors hover:text-white" style={fv}>cttpub@gmail.com</a>
+            </Reveal>
+
+            <Reveal as="div" delay={0.2} amount={0.4} className="absolute left-[836px] top-[392px] flex flex-col items-start gap-[8px] whitespace-nowrap">
+                <p className="shrink-0 font-display text-[12px] font-medium leading-[1.3] text-[#3c403c]" style={fv}>Instagram</p>
+                <a
+                    href="https://www.instagram.com/pandadesign_dz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 font-display text-[14px] font-normal leading-[1.4] text-[#adb3ab] transition-colors hover:text-white"
+                    style={fv}
+                >
+                    www.instagram.com/pandadesign_dz
+                </a>
+            </Reveal>
+
+            <Reveal fadeOnly as="div" delay={0.25} amount={0.4} className="absolute left-[1253.5px] top-[392px] flex -translate-x-1/2 flex-col items-start gap-[8px] whitespace-nowrap">
+                <p className="shrink-0 font-display text-[12px] font-medium leading-[1.3] text-[#3c403c]" style={fv}>Facebook</p>
+                <a
+                    href="https://www.facebook.com/pandadesigndz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 font-display text-[14px] font-normal leading-[1.4] text-[#adb3ab] transition-colors hover:text-white"
+                    style={fv}
+                >
+                    www.facebook.com/pandadesigndz
+                </a>
             </Reveal>
 
             <Reveal as="p" amount={0.6} className="absolute inset-[70.17%_33.89%_27.62%_58.06%] whitespace-nowrap font-display text-[12px] font-medium leading-[1.3] text-[#3c403c]" style={fv}>© 2026 — Copyright</Reveal>

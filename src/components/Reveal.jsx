@@ -11,6 +11,7 @@ const tags = {
     label: motion.label,
     h1: motion.h1,
     h2: motion.h2,
+    a: motion.a,
 }
 
 const EASE = [0.16, 1, 0.3, 1]
