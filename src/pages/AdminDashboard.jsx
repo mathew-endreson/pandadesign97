@@ -19,8 +19,8 @@ function TabButton({ active, onClick, children }) {
             onClick={onClick}
             className={
                 active
-                    ? 'rounded-[4px] bg-ink px-5 py-2 font-heading text-[14px] font-semibold capitalize text-white'
-                    : 'rounded-[4px] border border-black/15 px-5 py-2 font-heading text-[14px] font-semibold capitalize text-ink/60 transition-colors hover:border-black/40'
+                    ? 'rounded-full bg-ink px-5 py-2 font-heading text-[14px] font-semibold capitalize text-white'
+                    : 'rounded-full border border-black/15 px-5 py-2 font-heading text-[14px] font-semibold capitalize text-ink/60 transition-colors hover:border-black/40'
             }
         >
             {children}
@@ -231,7 +231,7 @@ function ProductsTab({ products, loading }) {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="rounded-[4px] bg-brand-red px-6 py-2.5 font-heading text-[14px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
+                        className="rounded-full bg-brand-red px-6 py-2.5 font-heading text-[14px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
                     >
                         {submitting ? 'saving…' : editingId ? 'save changes' : 'add product'}
                     </button>
@@ -239,7 +239,7 @@ function ProductsTab({ products, loading }) {
                         <button
                             type="button"
                             onClick={cancelEdit}
-                            className="rounded-[4px] border border-black/20 px-5 py-2.5 font-heading text-[14px] font-medium capitalize text-ink/70 transition-colors hover:border-black"
+                            className="rounded-full border border-black/20 px-5 py-2.5 font-heading text-[14px] font-medium capitalize text-ink/70 transition-colors hover:border-black"
                         >
                             cancel
                         </button>
@@ -253,7 +253,7 @@ function ProductsTab({ products, loading }) {
                     type="button"
                     onClick={handleSeed}
                     disabled={seeding}
-                    className="self-start rounded-[4px] border border-black/20 px-5 py-2.5 font-heading text-[14px] font-medium capitalize text-ink/70 transition-colors hover:border-black disabled:opacity-50"
+                    className="self-start rounded-full border border-black/20 px-5 py-2.5 font-heading text-[14px] font-medium capitalize text-ink/70 transition-colors hover:border-black disabled:opacity-50"
                 >
                     {seeding ? 'importing…' : 'import starter catalog (16 products)'}
                 </button>
@@ -273,7 +273,7 @@ function ProductsTab({ products, loading }) {
                                 <button
                                     type="button"
                                     onClick={() => startEdit(product)}
-                                    className="flex-1 rounded-[4px] border border-black/20 py-1.5 font-heading text-[12px] font-medium capitalize text-ink/70 transition-colors hover:border-black"
+                                    className="flex-1 rounded-full border border-black/20 py-1.5 font-heading text-[12px] font-medium capitalize text-ink/70 transition-colors hover:border-black"
                                 >
                                     edit
                                 </button>
@@ -281,7 +281,7 @@ function ProductsTab({ products, loading }) {
                                     type="button"
                                     onClick={() => handleDelete(product)}
                                     disabled={deletingId === product.id}
-                                    className="flex-1 rounded-[4px] border border-brand-red/30 py-1.5 font-heading text-[12px] font-medium capitalize text-brand-red transition-colors hover:border-brand-red disabled:opacity-50"
+                                    className="flex-1 rounded-full border border-brand-red/30 py-1.5 font-heading text-[12px] font-medium capitalize text-brand-red transition-colors hover:border-brand-red disabled:opacity-50"
                                 >
                                     {deletingId === product.id ? '…' : 'delete'}
                                 </button>

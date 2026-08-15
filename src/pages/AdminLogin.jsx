@@ -71,7 +71,7 @@ function AdminLogin() {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full rounded-[4px] bg-brand-red py-3 font-heading text-[16px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
+                    className="w-full rounded-full bg-brand-red py-3 font-heading text-[16px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
                 >
                     {submitting ? 'signing in…' : 'sign in'}
                 </button>

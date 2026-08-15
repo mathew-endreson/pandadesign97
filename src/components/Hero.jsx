@@ -113,7 +113,7 @@ function Hero() {
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             >
-                <span className="relative flex h-[56px] w-[248px] items-center rounded-[4px] border-2 border-solid border-black bg-white text-left transition-colors duration-300 group-hover:bg-black">
+                <span className="relative flex h-[56px] w-[248px] items-center rounded-full border-2 border-solid border-black bg-white text-left transition-colors duration-300 group-hover:bg-black">
                     <p className="absolute left-[27px] top-[12px] whitespace-nowrap font-heading text-[26px] font-medium capitalize text-[#1c1c1c] transition-colors duration-300 group-hover:text-white">
                         explore now !
                     </p>

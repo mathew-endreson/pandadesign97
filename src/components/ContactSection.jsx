@@ -132,7 +132,7 @@ function ContactSection({ offsetY = 0 }) {
                     as="button"
                     type="submit"
                     delay={0.2}
-                    className="group absolute left-[1201px] top-[6637px] flex h-[56px] w-[156px] items-center justify-center rounded-[4px] border-2 border-solid border-black bg-white transition-colors duration-300 hover:bg-black"
+                    className="group absolute left-[1201px] top-[6637px] flex h-[56px] w-[156px] items-center justify-center rounded-full border-2 border-solid border-black bg-white transition-colors duration-300 hover:bg-black"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >

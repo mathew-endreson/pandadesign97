@@ -77,7 +77,7 @@ function CartDrawer({ isOpen, onClose }) {
                                                     type="button"
                                                     aria-label="Decrease quantity"
                                                     onClick={() => updateQty(item.id, item.qty - 1)}
-                                                    className="flex size-[24px] items-center justify-center rounded-[4px] border border-black/20 text-ink transition-colors hover:border-black"
+                                                    className="flex size-[24px] items-center justify-center rounded-full border border-black/20 text-ink transition-colors hover:border-black"
                                                 >
                                                     −
                                                 </button>
@@ -86,7 +86,7 @@ function CartDrawer({ isOpen, onClose }) {
                                                     type="button"
                                                     aria-label="Increase quantity"
                                                     onClick={() => updateQty(item.id, item.qty + 1)}
-                                                    className="flex size-[24px] items-center justify-center rounded-[4px] border border-black/20 text-ink transition-colors hover:border-black"
+                                                    className="flex size-[24px] items-center justify-center rounded-full border border-black/20 text-ink transition-colors hover:border-black"
                                                 >
                                                     +
                                                 </button>
@@ -107,7 +107,7 @@ function CartDrawer({ isOpen, onClose }) {
                                     <Link
                                         to="/checkout"
                                         onClick={onClose}
-                                        className="flex w-full items-center justify-center rounded-[4px] bg-ink py-3 font-heading text-[18px] font-medium capitalize text-white"
+                                        className="flex w-full items-center justify-center rounded-full bg-ink py-3 font-heading text-[18px] font-medium capitalize text-white"
                                     >
                                         checkout
                                     </Link>

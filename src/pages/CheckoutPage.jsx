@@ -135,7 +135,7 @@ function CheckoutPage() {
                 </p>
                 <Link
                     to="/"
-                    className="mt-8 rounded-[4px] border-2 border-black px-8 py-3 font-heading text-[16px] font-medium capitalize text-ink transition-colors duration-300 hover:bg-black hover:text-white"
+                    className="mt-8 rounded-full border-2 border-black px-8 py-3 font-heading text-[16px] font-medium capitalize text-ink transition-colors duration-300 hover:bg-black hover:text-white"
                 >
                     back to store
                 </Link>
@@ -150,7 +150,7 @@ function CheckoutPage() {
                 <p className="mt-2 font-body text-[16px] text-ink/60">Add something you love before checking out.</p>
                 <Link
                     to="/"
-                    className="mt-8 rounded-[4px] border-2 border-black px-8 py-3 font-heading text-[16px] font-medium capitalize text-ink transition-colors duration-300 hover:bg-black hover:text-white"
+                    className="mt-8 rounded-full border-2 border-black px-8 py-3 font-heading text-[16px] font-medium capitalize text-ink transition-colors duration-300 hover:bg-black hover:text-white"
                 >
                     back to store
                 </Link>
@@ -313,7 +313,7 @@ function CheckoutPage() {
                         disabled={submitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.97 }}
-                        className="w-full rounded-[4px] bg-brand-red py-3.5 font-heading text-[17px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
+                        className="w-full rounded-full bg-brand-red py-3.5 font-heading text-[17px] font-semibold capitalize text-white transition-colors hover:bg-black disabled:opacity-50"
                     >
                         {submitting ? 'placing order…' : 'confirm order'}
                     </motion.button>

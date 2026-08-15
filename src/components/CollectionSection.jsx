@@ -157,8 +157,8 @@ function CollectionSection({ onGridHeightChange }) {
                                 }}
                                 className={
                                     isActive
-                                        ? 'flex h-[48px] items-center justify-center rounded-[5px] bg-[#ce1a21] pl-[21px] pr-[20px] py-[8px] font-heading text-[24px] font-semibold capitalize text-white'
-                                        : 'flex h-[48px] items-center justify-center rounded-[5px] border border-solid border-black pl-[21px] pr-[20px] py-[8px] font-heading text-[24px] capitalize text-black transition-colors duration-300 group-hover:bg-black group-hover:text-white'
+                                        ? 'flex h-[48px] items-center justify-center rounded-full bg-[#ce1a21] pl-[21px] pr-[20px] py-[8px] font-heading text-[24px] font-semibold capitalize text-white'
+                                        : 'flex h-[48px] items-center justify-center rounded-full border border-solid border-black pl-[21px] pr-[20px] py-[8px] font-heading text-[24px] capitalize text-black transition-colors duration-300 group-hover:bg-black group-hover:text-white'
                                 }
                             >
                                 {filter.label}

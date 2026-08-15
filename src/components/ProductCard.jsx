@@ -123,8 +123,8 @@ function ProductCard({ image, name, price, amount, category, size, description, 
                             style={{ fontSize: buttonTextSize, height: buttonHeight }}
                             className={
                                 justAdded
-                                    ? 'flex h-[38px] w-full items-center justify-center rounded-[4px] bg-[#1c1c1c] font-heading text-[15px] font-medium capitalize text-white transition-colors'
-                                    : 'flex h-[38px] w-full items-center justify-center rounded-[4px] border border-black font-heading text-[15px] font-medium capitalize text-[#1c1c1c] transition-colors group-hover:bg-[#1c1c1c] group-hover:text-white'
+                                    ? 'flex h-[38px] w-full items-center justify-center rounded-full bg-[#1c1c1c] font-heading text-[15px] font-medium capitalize text-white transition-colors'
+                                    : 'flex h-[38px] w-full items-center justify-center rounded-full border border-black font-heading text-[15px] font-medium capitalize text-[#1c1c1c] transition-colors group-hover:bg-[#1c1c1c] group-hover:text-white'
                             }
                         >
                             {justAdded ? 'added ✓' : 'add to cart'}
