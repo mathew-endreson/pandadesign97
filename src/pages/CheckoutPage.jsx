@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { useCart } from '../context/CartContext'
 import noestDeskData from '../data/noestDesks'
 import { db } from '../lib/firebase'
+import { trackEvent } from '../lib/metaPixel'
 import pandaLogo from '../assets/landing/panda-logo.svg'
 
 const SHIPPING_METHODS = [
@@ -38,6 +39,19 @@ function CheckoutPage() {
     const shippingCost = SHIPPING_METHODS.find((m) => m.id === shippingMethod)?.price ?? 0
     const total = subtotal + shippingCost
     const desksForWilaya = noestDeskData.find((w) => w.wilaya === form.wilaya)?.desks ?? []
+
+    // Fires once, when someone actually arrives at checkout with items in
+    // their cart — not on every re-render, and not for an empty-cart visit.
+    useEffect(() => {
+        if (items.length === 0) return
+        trackEvent('InitiateCheckout', {
+            content_ids: items.map((item) => item.id),
+            value: subtotal,
+            currency: 'DZD',
+            num_items: items.reduce((sum, item) => sum + item.qty, 0),
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleChange = (field) => (e) => {
         setForm((current) => ({ ...current, [field]: e.target.value }))
@@ -83,6 +97,12 @@ function CheckoutPage() {
                 createdAt: serverTimestamp(),
             })
             setOrder({ number: orderNumber, name: form.name.trim(), total })
+            trackEvent('Purchase', {
+                content_ids: items.map((item) => item.id),
+                value: total,
+                currency: 'DZD',
+                num_items: items.reduce((sum, item) => sum + item.qty, 0),
+            })
             clearCart()
         } catch {
             setSubmitError('Something went wrong placing your order. Please try again.')

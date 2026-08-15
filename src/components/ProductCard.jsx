@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useCart } from '../context/CartContext'
 import { useHitSlop } from '../context/ScaleContext'
+import { trackEvent } from '../lib/metaPixel'
 
 const FALLBACK_DESCRIPTION = 'Timeless décor, carefully curated to help you create ...'
 
@@ -22,6 +23,13 @@ function ProductCard({ image, name, price, amount, category, size, description, 
         const id = `${name}-${amount}`.toLowerCase().replace(/\s+/g, '-')
         addItem({ id, name, price, amount, image, category, size })
         setJustAdded(true)
+        trackEvent('AddToCart', {
+            content_ids: [id],
+            content_name: name,
+            content_type: 'product',
+            value: amount,
+            currency: 'DZD',
+        })
     }
 
     const shownDescription = description?.trim() || FALLBACK_DESCRIPTION
