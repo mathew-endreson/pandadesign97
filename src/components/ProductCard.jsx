@@ -78,7 +78,7 @@ function ProductCard({ image, name, price, amount, category, size, description, 
                 <div className="flex w-full items-center gap-[17px]" style={{ gap: rowGap }}>
                     <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
                         <p
-                            className="font-heading text-[26px] font-semibold leading-normal text-[#1c1c1c]"
+                            className="truncate font-heading text-[26px] font-semibold leading-normal text-[#1c1c1c]"
                             style={{ fontSize: nameSize }}
                         >
                             {name}
@@ -93,7 +93,7 @@ function ProductCard({ image, name, price, amount, category, size, description, 
                         )}
                     </div>
                     <div
-                        className="flex h-[32px] w-[107px] flex-col justify-center font-heading text-[22px] font-medium leading-none text-[#d21720]"
+                        className="flex h-[32px] w-[90px] shrink-0 flex-col justify-center font-heading text-[22px] font-medium leading-none text-[#d21720]"
                         style={{ fontSize: priceSize, height: priceBoxHeight, width: isMobile ? 'auto' : undefined }}
                     >
                         <p className="whitespace-nowrap leading-normal">{price}</p>
@@ -101,8 +101,8 @@ function ProductCard({ image, name, price, amount, category, size, description, 
                 </div>
                 <div className="flex w-full flex-col items-start gap-[14px]" style={{ gap: detailsGap }}>
                     <div
-                        className="flex min-h-[39px] w-full flex-col justify-center font-body text-[16px] font-light leading-snug text-[#1c1c1c]"
-                        style={{ fontVariationSettings: '"wdth" 100', fontSize: descSize, minHeight: descHeight }}
+                        className="flex h-[44px] w-full flex-col justify-center font-body text-[16px] font-light leading-snug text-[#1c1c1c]"
+                        style={{ fontVariationSettings: '"wdth" 100', fontSize: descSize, height: descHeight }}
                     >
                         <p className="line-clamp-2">{shownDescription}</p>
                     </div>
