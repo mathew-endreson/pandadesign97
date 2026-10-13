@@ -18,6 +18,7 @@ export default {
                 display: ['"Bricolage Grotesque"', 'sans-serif'],
                 heading: ['Montserrat', 'sans-serif'],
                 body: ['Roboto', 'sans-serif'],
+                arabic: ['Cairo', 'sans-serif'],
             },
             keyframes: {
                 marquee: {

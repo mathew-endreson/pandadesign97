@@ -11,6 +11,7 @@ const tags = {
     label: motion.label,
     h1: motion.h1,
     h2: motion.h2,
+    h3: motion.h3,
     a: motion.a,
 }
 
@@ -36,6 +37,7 @@ function Reveal({
     floatDistance = 10,
     floatDuration = 4,
     wobble = 0,
+    alwaysFloat = false,
     ...props
 }) {
     const shouldReduceMotion = useReducedMotion()
@@ -65,7 +67,7 @@ function Reveal({
     }
 
     const handleViewportEnter = () => {
-        if (shouldReduceMotion) return
+        if (shouldReduceMotion && !alwaysFloat) return
         controls
             .start({ opacity: 1, ...settled, transition: { duration, delay, ease: EASE } })
             .then(() => controls.start({

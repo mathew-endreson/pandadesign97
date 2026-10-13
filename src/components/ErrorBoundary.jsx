@@ -2,7 +2,7 @@ import { Component } from 'react'
 
 // A blank white screen with an error only in the console is invisible to
 // anyone who isn't a developer with devtools open — this turns any crash
-// (Firebase misconfiguration, a bad render, anything) into a message that's
+// (a bad render, anything) into a message that's
 // actually readable on the page itself.
 class ErrorBoundary extends Component {
     state = { error: null }

@@ -1,6 +1,6 @@
 const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID
 
-// Unlike Firebase, a missing pixel ID should never take the site down —
+// A missing pixel ID should never take the site down —
 // analytics is allowed to just not run. Every export here is a no-op if
 // the pixel was never initialized (no ID configured, or running server-side).
 let initialized = false
@@ -29,7 +29,7 @@ export function initMetaPixel() {
     /* eslint-enable */
 
     window.fbq('init', PIXEL_ID)
-    // No `fbq('track', 'PageView')` here — the router-driven tracker fires
+    // No `fbq('track', 'PageView')` here — App fires
     // the first PageView on mount too, so calling it here would double-count.
 }
 

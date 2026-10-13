@@ -7,3 +7,20 @@
     @apply antialiased text-ink bg-white font-body;
   }
 }
+
+html,
+body {
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+}
+
+/* Arabic: the Latin display fonts have no Arabic glyphs, so route everything
+   through Cairo and drop tracking (letter-spacing breaks Arabic joins). */
+html[lang='ar'] *,
+html[lang='ar'] *::before,
+html[lang='ar'] *::after {
+  font-family: 'Cairo', sans-serif !important;
+  letter-spacing: 0 !important;
+  font-variation-settings: normal !important;
+}
